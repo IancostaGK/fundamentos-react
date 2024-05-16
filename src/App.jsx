@@ -45,7 +45,7 @@ const posts = [
 
 function App() {
   return (
-    <>
+    <div>
       <Header author="Ian Santos" content="Lorem Ipsum 1" />
 
       <div className={styles.wrapper}>
@@ -64,7 +64,7 @@ function App() {
           })}
         </main>
       </div>
-    </>
+    </div>
   );
 }
 
