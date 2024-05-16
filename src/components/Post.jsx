@@ -1,10 +1,14 @@
 import { format, formatDistanceToNow } from "date-fns";
 import ptBR from "date-fns/locale/pt-BR";
+import { useState } from "react";
 import { Avatar } from "./Avatar";
 import { Comment } from "./Comment";
 import styles from "./post.module.css";
 
 export function Post({ author, publishedAt, content }) {
+  const [comments, setComments] = useState([]);
+  const [newCommentText, setNewCommentText] = useState("");
+
   const publishedDateFormatted = format(
     publishedAt,
     "d 'de' LLLL 'às' HH:mm'h'",
@@ -17,6 +21,25 @@ export function Post({ author, publishedAt, content }) {
     locale: ptBR,
     addSuffix: true,
   });
+
+  function handleCrateNewComment(event) {
+    event.preventDefault();
+    setComments([
+      ...comments,
+      {
+        content: newCommentText,
+        likes: 0,
+        publishedAt: new Date(),
+      },
+    ]);
+
+    setNewCommentText("");
+  }
+
+  function handleNewCommentChange(event) {
+    setNewCommentText(event.target.value);
+  }
+
   return (
     <article className={styles.post}>
       <header>
@@ -50,18 +73,29 @@ export function Post({ author, publishedAt, content }) {
         })}
       </div>
 
-      <form className={styles.commentForm}>
+      <form onSubmit={handleCrateNewComment} className={styles.commentForm}>
         <strong>Deixe seu feedback</strong>
-        <textarea placeholder="Deixe seu comentario" />
+        <textarea
+          placeholder="Deixe seu comentario"
+          value={newCommentText}
+          onChange={handleNewCommentChange}
+        />
         <footer>
           <button type="submit">Publicar</button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        <Comment />
-        <Comment />
-        <Comment />
+        {comments.map(({ content, likes, publishedAt }, i) => {
+          return (
+            <Comment
+              key={i}
+              content={content}
+              likes={likes}
+              publishedAt={publishedAt}
+            />
+          );
+        })}
       </div>
     </article>
   );
