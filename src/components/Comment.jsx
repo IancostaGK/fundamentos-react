@@ -4,7 +4,13 @@ import ptBR from "date-fns/locale/pt-BR";
 import { Avatar } from "./Avatar";
 import styles from "./comment.module.css";
 
-export function Comment({ content, likes, publishedAt }) {
+export function Comment({
+  content,
+  likes,
+  publishedAt,
+  handleDeleteComment,
+  handleLikePost,
+}) {
   const publishedDateFormatted = format(
     publishedAt,
     "d 'de' LLLL 'às' HH:mm'h'",
@@ -35,7 +41,7 @@ export function Comment({ content, likes, publishedAt }) {
               </time>
             </div>
 
-            <button title="Deletar comentário">
+            <button title="Deletar comentário" onClick={handleDeleteComment}>
               <Trash size={24} />
             </button>
           </header>
@@ -44,7 +50,7 @@ export function Comment({ content, likes, publishedAt }) {
         </div>
 
         <footer>
-          <button>
+          <button onClick={handleLikePost}>
             <ThumbsUp />
             Aplaudir <span>{likes}</span>
           </button>

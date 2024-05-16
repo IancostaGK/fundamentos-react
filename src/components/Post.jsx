@@ -32,13 +32,33 @@ export function Post({ author, publishedAt, content }) {
         publishedAt: new Date(),
       },
     ]);
-
     setNewCommentText("");
+  }
+
+  function handleDeleteComment(index) {
+    setComments(comments.filter((_, i) => i !== index));
   }
 
   function handleNewCommentChange(event) {
     setNewCommentText(event.target.value);
   }
+
+  function handleLikePost(index) {
+    const updatedComments = comments.map((comment, i) => {
+      if (i === index) {
+        return {
+          ...comment,
+          likes: comment.likes + 1,
+        };
+      }
+
+      return comment;
+    });
+
+    setComments(updatedComments);
+  }
+
+  const isNewCommentEmpty = !newCommentText.length;
 
   return (
     <article className={styles.post}>
@@ -79,20 +99,25 @@ export function Post({ author, publishedAt, content }) {
           placeholder="Deixe seu comentario"
           value={newCommentText}
           onChange={handleNewCommentChange}
+          required
         />
         <footer>
-          <button type="submit">Publicar</button>
+          <button type="submit" disabled={isNewCommentEmpty}>
+            Publicar
+          </button>
         </footer>
       </form>
 
       <div className={styles.commentList}>
-        {comments.map(({ content, likes, publishedAt }) => {
+        {comments.map(({ content, likes, publishedAt }, i) => {
           return (
             <Comment
               key={content}
               content={content}
               likes={likes}
               publishedAt={publishedAt}
+              handleDeleteComment={() => handleDeleteComment(i)}
+              handleLikePost={() => handleLikePost(i)}
             />
           );
         })}
